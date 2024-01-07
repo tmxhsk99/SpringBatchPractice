@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * Hello, World! Job Configuration
  * job은 JobRepository를 주입받아야하며, step은 jobRepository와 transactionManager를 주입받아야 한다.
  * 수동으로 설정해줄수도 있지만 그냥 DefaultBatchConfiguration을 상속받는 형태로 구현함
+ * EnableBatchProcessing 어노테이션을 사용해서 명시적으로 jobRepository, transactionManager를 주입받을 수도 있음
  *
  */
 @Configuration
