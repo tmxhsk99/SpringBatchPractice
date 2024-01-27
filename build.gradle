@@ -49,18 +49,11 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
-	// 민감정보 암호화
-	// https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
-	implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
-
 	// MyBatis
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
 
 	// Spring Batch
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
-
-	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
-	implementation 'com.mysql:mysql-connector-j:8.2.0'
 
 	runtimeOnly 'com.h2database:h2'
 

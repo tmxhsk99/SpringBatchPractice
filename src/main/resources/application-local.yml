@@ -8,10 +8,10 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     hikari:
-      driverClassName: com.mysql.cj.jdbc.Driver
-      jdbcUrl: ENC(7R4PqEBAJrbcY0w5QUli1xwGmnKjbjwFUtW8NiIaN0JiLNLss5aGEVCWoXmLHNm2tJhDOZ/HRcaEMe2q7jzzkH7reRHlqc/pJ7+MyO5JVEEJqN0MTa8afHAy94K7px2eSVwSrWgwDYHHUVh8R+/0tgUjVZjl2+N5)
-      username: ENC(2B3sO2/zU7tj2IXe2co+Ag==)
-      password: ENC(2B3sO2/zU7tj2IXe2co+Ag==)
+      driverClassName: org.mariadb.jdbc.Driver
+      jdbcUrl: jdbc:mariadb://localhost:3306/SPRING_BATCH?characterEncoding=UTF-8&serverTimezone=UTC
+      username: root
+      password: root
       maximum-pool-size: 80
       max-lifetime: 1800000
   h2:
