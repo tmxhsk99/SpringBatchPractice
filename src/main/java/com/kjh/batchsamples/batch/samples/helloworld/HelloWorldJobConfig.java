@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.support.DefaultBatchConfiguration;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.TaskletStep;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -24,7 +22,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
-public class HelloWorldJobConfiguration extends DefaultBatchConfiguration {
+public class HelloWorldJobConfig extends DefaultBatchConfiguration {
+
+	@Bean
+	public Job helloWorldJob(Step helloWorldStep) {
+		Job job = new JobBuilder("helloWorldJob", jobRepository())
+				.start(helloWorldStep)
+				.build();
+		return job;
+	}
 
 	@Bean
 	public Step helloWorldStep() {
@@ -37,14 +43,6 @@ public class HelloWorldJobConfiguration extends DefaultBatchConfiguration {
 				}, getTransactionManager()).build();
 
 		return step;
-	}
-	
-	@Bean
-	public Job helloWorldJob(Step helloWorldStep) {
-		Job job = new JobBuilder("helloWorldJob", jobRepository())
-				.start(helloWorldStep)
-				.build();
-		return job;
 	}
 
 }
