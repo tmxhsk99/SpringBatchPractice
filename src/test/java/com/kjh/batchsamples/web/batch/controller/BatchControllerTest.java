@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -16,8 +15,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 배치 수동실행 테스트 클래스
@@ -36,10 +33,9 @@ class BatchControllerTest {
 
 
     @Test
-    @DisplayName("배치 수동 실행 테스트")
+    @DisplayName("helloWorldJob 배치를 실행 한다.")
     void batchHandWriteRun() throws Exception {
-        Map<String, String> jobParameters = new HashMap<>();
-        jobParameters.put("RunDT", CommonUtil.getCurDay_yyyyMMddHHmmss());
+        Map<String, String> jobParameters = getDefaultJobParameters();
 
         BatchRunReq testBatchReq = BatchRunReq.builder()
                 .jobName("helloWorldJob")
@@ -53,6 +49,37 @@ class BatchControllerTest {
 
     }
 
+    @Test
+    @DisplayName("TrailerSampleJob 배치 수동 실행 한다.")
+    void executeTrailerSampleJob() throws Exception {
+        // 기존 경로의 생성된 데이터를 삭제 한다.
+        String curDay = CommonUtil.getCurDay_yyyyMMdd();
+        CommonUtil.deleteFile("D:/project/SpringBatchPractice/file/trailer/trailer_sample_"+curDay+".txt");
 
+        // jobParameters 및 JobName 설정
+        Map<String, String> jobParameters = getDefaultJobParameters();
+        BatchRunReq testBatchReq = BatchRunReq.builder()
+                .jobName("trailerSampleJob")
+                .jobParameters(jobParameters)
+                .build();
+
+        System.out.println("testBatchReq = " + testBatchReq);
+        // 배치를 실행 한다.
+        mockMvc.perform(MockMvcRequestBuilders.post("/batch/run")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(testBatchReq)))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    /**
+     * 기본 JobParameters 설정
+     * Batch 파라미터 설정을 위한 기본값을 설정한다.
+     * @return
+     */
+    private Map<String, String> getDefaultJobParameters() {
+        Map<String, String> jobParameters = new HashMap<>();
+        jobParameters.put("runDt", CommonUtil.getCurDay_yyyyMMddHHmmss());
+        return jobParameters;
+    }
 
 }
