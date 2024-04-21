@@ -1,5 +1,10 @@
 package com.kjh.batchsamples.util;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,5 +67,30 @@ public class CommonUtil {
             sb.append((int) (Math.random() * 10));
         }
         return sb.toString();
+    }
+
+    /**
+     * filePath가 디렉터리인지 파일인지 확인하고
+     * 디렉터리 라면 내부에 모든 파일을 삭제하고, 파일이라면 해당 파일만 삭제
+     * @param filePath
+     */
+    public static void deleteFile(String filePath) {
+        try {
+            Path path = Paths.get(filePath);
+            // 파일이 존재하지 않느 경우 return 처리 한다.
+            if (!Files.exists(path)) {
+                return;
+            }
+
+            if (Files.isDirectory(path)) {
+                Files.walk(path)
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+            } else {
+                Files.delete(path);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
