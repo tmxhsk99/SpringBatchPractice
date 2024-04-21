@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 배치 수동실행 테스트 클래스
+ * 배치 수동 실행 테스트 클래스
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -58,12 +58,20 @@ class BatchControllerTest {
 
         // jobParameters 및 JobName 설정
         Map<String, String> jobParameters = getDefaultJobParameters();
+
+        // 추가적인 jobPrameters 설정
+        // 요청 mid
+        jobParameters.put("mid", "tosspayments");
+        // 조회 시작 거래일자
+        jobParameters.put("startTrxDt", "20230102");
+        // 조회 종료 거래일자
+        jobParameters.put("endTrxDt", "20230102");
+
         BatchRunReq testBatchReq = BatchRunReq.builder()
                 .jobName("trailerSampleJob")
                 .jobParameters(jobParameters)
                 .build();
 
-        System.out.println("testBatchReq = " + testBatchReq);
         // 배치를 실행 한다.
         mockMvc.perform(MockMvcRequestBuilders.post("/batch/run")
                         .contentType("application/json")
