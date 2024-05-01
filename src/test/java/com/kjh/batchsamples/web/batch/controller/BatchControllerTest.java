@@ -79,6 +79,24 @@ class BatchControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    @DisplayName("csvItemCountJob 배치 수동 실행 한다.")
+    void executeCsvItemCountJob() throws Exception {
+        // jobParameters 및 JobName 설정
+        Map<String, String> jobParameters = getDefaultJobParameters();
+
+        BatchRunReq testBatchReq = BatchRunReq.builder()
+                .jobName("csvItemCountJob")
+                .jobParameters(jobParameters)
+                .build();
+
+        // 배치를 실행 한다.
+        mockMvc.perform(MockMvcRequestBuilders.post("/batch/run")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(testBatchReq)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
     /**
      * 기본 JobParameters 설정
      * Batch 파라미터 설정을 위한 기본값을 설정한다.
