@@ -31,7 +31,7 @@ public class ItemCountJobExecutionListener implements JobExecutionListener {
         Double readCountDouble = Double.valueOf(readCount);
         Double totAgeDouble = Double.valueOf(totAge);
 
-        log.info("전체 처리한 데이터 수: {}", readCount);
-        log.info("평균 나이 : {}", totAgeDouble / readCountDouble);
+        log.info("전체 처리한 데이터 수: {}", String.valueOf(readCount));
+        log.info("평균 나이 : {}", String.valueOf(totAgeDouble / readCountDouble));
     }
 }
