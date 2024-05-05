@@ -2,10 +2,9 @@ package com.kjh.batchsamples.batch.samples.validation.trailers.csvitemcount;
 
 
 /**
- * Batch 청크 단위 실행 될 때 마다 1번 씩 실행 됨
+ * ItemStream 인터페이스를 구현하여 스트림 처리를 구현한다.
+ *
  */
-
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStream;
@@ -23,6 +22,7 @@ public class ItemCountItemStream implements ItemStream {
     public void update(ExecutionContext executionContext) throws ItemStreamException {
         // 주기적으로 레코드 수 기록
         log.info("Item count: {}", executionContext.get("FlatFileItemReader.read.count"));
+
     }
 
     @Override

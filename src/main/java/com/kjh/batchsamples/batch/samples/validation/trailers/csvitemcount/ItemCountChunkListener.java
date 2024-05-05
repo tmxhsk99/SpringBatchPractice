@@ -4,8 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.scope.context.ChunkContext;
 
+/**
+ * Chunk 단위로 처리 후 처리할 로직을 정의
+
+ */
 @Slf4j
-public class ItemCountListener implements ChunkListener {
+public class ItemCountChunkListener implements ChunkListener {
     @Override
     public void beforeChunk(ChunkContext context) {
 

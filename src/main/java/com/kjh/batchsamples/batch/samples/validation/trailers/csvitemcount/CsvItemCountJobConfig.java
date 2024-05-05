@@ -3,8 +3,10 @@ package com.kjh.batchsamples.batch.samples.validation.trailers.csvitemcount;
 import com.kjh.batchsamples.batch.samples.validation.trailers.csvitemcount.model.Employee;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.ItemWriteListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.support.DefaultBatchConfiguration;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -25,6 +27,8 @@ import org.springframework.core.io.Resource;
 @Configuration
 public class CsvItemCountJobConfig extends DefaultBatchConfiguration {
 
+    private final ItemCountWriterListener itemCountWriterListener;
+
     /**
      * 읽어 들일 csv 파일
      */
@@ -35,6 +39,7 @@ public class CsvItemCountJobConfig extends DefaultBatchConfiguration {
         return new JobBuilder("csvItemCountJob", jobRepository())
                 .incrementer(new RunIdIncrementer())
                 .start(ItemCountStep1 ())
+                .listener(jobExecutionListener())
                 .build();
     }
 
@@ -44,13 +49,27 @@ public class CsvItemCountJobConfig extends DefaultBatchConfiguration {
                 .<Employee, Employee>chunk(1, getTransactionManager())
                 .reader(csvItemCountReader())
                 .writer(csvItemConsoleWriter())
-                //.stream(csvItemCountStream())
-                .listener(listener())
+                .listener((StepExecutionListener) itemCountWriterListener)
+                .listener((ItemWriteListener<? super Employee>) itemCountWriterListener)
                 .build();
     }
     @Bean
-    public ItemCountListener listener(){
-        return new ItemCountListener();
+    public StepExecutionListener stepExecutionListener(){
+        return this.itemCountWriterListener;
+    }
+    @Bean
+    public ItemCountChunkListener chunkListener(){
+        return new ItemCountChunkListener();
+    }
+
+    @Bean
+    public ItemWriteListener writerListener(){
+        return this.itemCountWriterListener;
+    }
+
+    @Bean
+    public ItemCountJobExecutionListener jobExecutionListener(){
+        return new ItemCountJobExecutionListener();
     }
 
     @Bean
@@ -73,8 +92,8 @@ public class CsvItemCountJobConfig extends DefaultBatchConfiguration {
         DefaultLineMapper<Employee> lineMapper = new DefaultLineMapper<>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
 
-        lineTokenizer.setNames(new String[] {"id","firstName","lastName"});
-        lineTokenizer.setIncludedFields(new int[] {0, 1, 2});
+        lineTokenizer.setNames(new String[] {"id","firstName","lastName","age"});
+        lineTokenizer.setIncludedFields(new int[] {0, 1, 2, 3});
 
         BeanWrapperFieldSetMapper<Employee> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(Employee.class);
